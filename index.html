@@ -1,81 +1,218 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <title>Dilvara – Shayari App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Dilvara – Shayari App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #ff758c, #ff7eb3);
-      color: #fff;
-      text-align: center;
-    }
-    header {
-      padding: 20px;
-      font-size: 26px;
-      font-weight: bold;
-    }
-    .card {
-      background: #ffffff;
-      color: #333;
-      margin: 20px;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
-    .shayari {
-      font-size: 20px;
-      line-height: 1.6;
-    }
-    button {
-      margin-top: 15px;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 25px;
-      background: #ff4d6d;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #e63956;
-    }
-    footer {
-      font-size: 14px;
-      opacity: 0.8;
-      margin-bottom: 15px;
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  font-family: "Noto Sans Devanagari", Arial, sans-serif;
+  background: linear-gradient(135deg,#6a11cb,#2575fc);
+  color:#fff;
+  text-align:center;
+  transition:0.3s;
+}
+.dark{
+  background:#121212;
+  color:#eee;
+}
+header{
+  padding:18px;
+  font-size:26px;
+  font-weight:bold;
+}
+.container{
+  padding:20px;
+}
+select,button{
+  padding:10px 16px;
+  border:none;
+  border-radius:25px;
+  margin:6px;
+  font-size:15px;
+}
+.card{
+  background:#fff;
+  color:#333;
+  padding:22px;
+  border-radius:18px;
+  margin:20px 0;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+.dark .card{
+  background:#1e1e1e;
+  color:#fff;
+}
+.shayari{
+  font-size:19px;
+  line-height:1.7;
+}
+footer{
+  font-size:13px;
+  opacity:0.8;
+  margin-bottom:12px;
+}
+</style>
 </head>
 
 <body>
 
-<header>💖 Dilvara Shayari</header>
+<header id="title">💖 दिलवारा शायरी</header>
 
-<div class="card">
-  <div class="shayari" id="shayariText">
-    "Dil se likhi har baat,  
-    Dil tak zaroor pahunchti hai… ❤️"
+<div class="container">
+
+  <button onclick="toggleLang()">🌐 हिंदी / English</button>
+  <button onclick="toggleDark()">🌙 Dark Mode</button>
+
+  <br><br>
+
+  <select id="category" onchange="changeCategory()"></select>
+
+  <div class="card">
+    <div class="shayari" id="shayariText"></div>
   </div>
-  <button onclick="shareShayari()">📤 Share Shayari</button>
+
+  <button onclick="nextShayari()" id="nextBtn"></button>
+  <button onclick="copyShayari()" id="copyBtn"></button>
+  <button onclick="shareShayari()" id="shareBtn"></button>
+
 </div>
 
-<footer>© 2026 Dilvara App</footer>
+<footer id="footer">© 2026 Dilvara App</footer>
 
 <script>
-  function shareShayari() {
-    const text = document.getElementById("shayariText").innerText;
-    if (navigator.share) {
-      navigator.share({
-        text: text
-      });
-    } else {
-      alert("Sharing supported nahi hai is browser me");
+let lang="hi";
+
+const text={
+  hi:{
+    title:"💖 दिलवारा शायरी",
+    next:"➡ अगली शायरी",
+    copy:"📋 कॉपी",
+    share:"📤 शेयर",
+    copied:"शायरी कॉपी हो गई ✅",
+    noshare:"शेयर सपोर्ट नहीं है",
+    categories:{
+      love:"❤️ प्रेम",
+      sad:"😢 दर्द",
+      motivational:"💪 प्रेरणा",
+      funny:"😄 मज़ेदार"
+    }
+  },
+  en:{
+    title:"💖 Dilvara Shayari",
+    next:"➡ Next",
+    copy:"📋 Copy",
+    share:"📤 Share",
+    copied:"Shayari copied ✅",
+    noshare:"Share not supported",
+    categories:{
+      love:"❤️ Love",
+      sad:"😢 Sad",
+      motivational:"💪 Motivational",
+      funny:"😄 Funny"
     }
   }
+};
+
+const data={
+  hi:{
+    love:[
+      "तुम्हारी मुस्कान मेरी सबसे बड़ी खुशी है ❤️",
+      "सच्चा प्यार किस्मत वालों को मिलता है।"
+    ],
+    sad:[
+      "कुछ दर्द शब्दों में नहीं कहे जाते 😔",
+      "खामोशी भी एक जवाब होती है।"
+    ],
+    motivational:[
+      "खुद पर भरोसा रखो, जीत पक्की है 💪",
+      "संघर्ष ही सफलता की पहचान है।"
+    ],
+    funny:[
+      "प्यार हो या चार्जर, fast होना चाहिए 😄",
+      "ज़िंदगी कम है, टेंशन ज्यादा 😂"
+    ]
+  },
+  en:{
+    love:[
+      "Your smile is my biggest happiness ❤️",
+      "True love is a rare blessing."
+    ],
+    sad:[
+      "Some pain is felt, not spoken 😔",
+      "Silence also has answers."
+    ],
+    motivational:[
+      "Believe in yourself, success will come 💪",
+      "Struggle creates strength."
+    ],
+    funny:[
+      "Love should be strong like WiFi 😄",
+      "Life is short, stress is free 😂"
+    ]
+  }
+};
+
+let current="love";
+let index=0;
+
+function loadUI(){
+  document.getElementById("title").innerText=text[lang].title;
+  document.getElementById("nextBtn").innerText=text[lang].next;
+  document.getElementById("copyBtn").innerText=text[lang].copy;
+  document.getElementById("shareBtn").innerText=text[lang].share;
+
+  let cat=document.getElementById("category");
+  cat.innerHTML="";
+  for(let c in text[lang].categories){
+    let o=document.createElement("option");
+    o.value=c;
+    o.text=text[lang].categories[c];
+    cat.appendChild(o);
+  }
+  show();
+}
+
+function show(){
+  document.getElementById("shayariText").innerText=data[lang][current][index];
+}
+
+function nextShayari(){
+  index=(index+1)%data[lang][current].length;
+  show();
+}
+
+function changeCategory(){
+  current=document.getElementById("category").value;
+  index=0;
+  show();
+}
+
+function copyShayari(){
+  navigator.clipboard.writeText(data[lang][current][index]);
+  alert(text[lang].copied);
+}
+
+function shareShayari(){
+  if(navigator.share){
+    navigator.share({text:data[lang][current][index]});
+  }else{
+    alert(text[lang].noshare);
+  }
+}
+
+function toggleDark(){
+  document.body.classList.toggle("dark");
+}
+
+function toggleLang(){
+  lang = lang==="hi" ? "en" : "hi";
+  loadUI();
+}
+
+loadUI();
 </script>
 
 </body>
