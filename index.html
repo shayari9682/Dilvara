@@ -2,100 +2,97 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Dilvara – Premium Shayari</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dilvara – Shayari Poster App</title>
 
 <style>
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box;}
 body{
   margin:0;
   height:100vh;
-  font-family: 'Poppins', Arial, sans-serif;
-  background: linear-gradient(160deg,#ff512f,#dd2476);
+  font-family:'Poppins', Arial, sans-serif;
+  background:linear-gradient(160deg,#0f2027,#203a43,#2c5364);
   display:flex;
   justify-content:center;
-  align-items:center;
-  color:#fff;
 }
-
-/* APP CONTAINER */
 .app{
   width:100%;
-  max-width:420px;
+  max-width:430px;
   height:100vh;
-  background:linear-gradient(160deg,#ff512f,#dd2476);
   display:flex;
   flex-direction:column;
+  color:#fff;
 }
 
 /* HEADER */
 .header{
   padding:18px;
-  font-size:24px;
-  font-weight:600;
   text-align:center;
-  background:rgba(0,0,0,0.15);
+  font-size:26px;
+  font-weight:700;
+  background:linear-gradient(90deg,#ff512f,#dd2476);
 }
 
-/* CONTROLS */
-.controls{
+/* TOP CONTROLS */
+.top{
   display:flex;
   justify-content:space-around;
   padding:10px;
 }
-.controls button{
-  background:rgba(255,255,255,0.2);
+.top button{
   border:none;
-  color:#fff;
-  padding:8px 14px;
+  padding:8px 16px;
   border-radius:20px;
-  font-size:14px;
+  background:rgba(255,255,255,0.2);
+  color:#fff;
 }
 
 /* CATEGORY */
-.category{
-  padding:10px;
-}
-.category select{
-  width:100%;
+select{
+  margin:10px;
   padding:12px;
-  border-radius:25px;
+  border-radius:30px;
   border:none;
-  font-size:15px;
+  font-size:16px;
 }
 
-/* CARD */
+/* SHAYARI CARD */
 .card{
   flex:1;
   margin:15px;
-  background:#fff;
-  color:#333;
-  border-radius:22px;
-  padding:22px;
+  border-radius:30px;
+  padding:25px;
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
-  font-size:20px;
+  background:linear-gradient(135deg,#f7971e,#ffd200);
+  box-shadow:0 20px 40px rgba(0,0,0,0.4);
+}
+
+/* BIG BOLD SHAYARI */
+.shayari{
+  font-size:28px;           /* 🔥 BADA */
+  font-weight:800;          /* 🔥 MOTA */
   line-height:1.6;
-  box-shadow:0 15px 35px rgba(0,0,0,0.3);
+  background:linear-gradient(90deg,#ff416c,#ff4b2b,#ffcc00,#00c6ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 /* ACTIONS */
 .actions{
-  padding:12px;
   display:flex;
-  justify-content:space-between;
+  padding:10px;
 }
 .actions button{
   flex:1;
   margin:5px;
-  padding:12px;
-  font-size:15px;
+  padding:14px;
   border:none;
-  border-radius:25px;
+  border-radius:30px;
+  font-size:16px;
+  font-weight:600;
   background:linear-gradient(135deg,#667eea,#764ba2);
   color:#fff;
 }
@@ -105,7 +102,7 @@ body{
   text-align:center;
   font-size:12px;
   opacity:0.8;
-  padding-bottom:8px;
+  padding-bottom:6px;
 }
 </style>
 </head>
@@ -116,20 +113,20 @@ body{
 
   <div class="header" id="title">💖 दिलवारा शायरी</div>
 
-  <div class="controls">
+  <div class="top">
     <button onclick="toggleLang()">🌐 हिंदी / English</button>
   </div>
 
-  <div class="category">
-    <select id="category" onchange="changeCategory()"></select>
-  </div>
+  <select id="category" onchange="changeCategory()"></select>
 
-  <div class="card" id="shayariText"></div>
+  <div class="card">
+    <div class="shayari" id="shayariText"></div>
+  </div>
 
   <div class="actions">
     <button onclick="prev()">⬅</button>
-    <button onclick="copyText()">📋</button>
-    <button onclick="shareText()">📤</button>
+    <button onclick="copy()">📋</button>
+    <button onclick="share()">📤</button>
     <button onclick="next()">➡</button>
   </div>
 
@@ -141,28 +138,22 @@ body{
 let lang="hi",cat="love",i=0;
 
 const ui={
-hi:{
-title:"💖 दिलवारा शायरी",
-cats:{love:"❤️ प्रेम",sad:"😢 दर्द",mot:"💪 प्रेरणा",fun:"😄 मज़ेदार"}
-},
-en:{
-title:"💖 Dilvara Shayari",
-cats:{love:"❤️ Love",sad:"😢 Sad",mot:"💪 Motivation",fun:"😄 Funny"}
-}
+hi:{title:"💖 दिलवारा शायरी",cats:{love:"❤️ प्रेम",sad:"😢 दर्द",mot:"💪 प्रेरणा",fun:"😄 मज़ेदार"}},
+en:{title:"💖 Dilvara Shayari",cats:{love:"❤️ Love",sad:"😢 Sad",mot:"💪 Motivation",fun:"😄 Funny"}}
 };
 
 const data={
 hi:{
-love:["तुम्हारी एक मुस्कान पूरी दुनिया भुला देती है ❤️","सच्चा प्यार खामोशी में भी महसूस होता है।"],
-sad:["कुछ दर्द दिखाए नहीं जाते 😔","खामोशी सबसे गहरी चीख होती है।"],
-mot:["खुद पर यकीन रखो, जीत तय है 💪","संघर्ष सफलता की सीढ़ी है।"],
-fun:["प्यार strong होना चाहिए WiFi जैसा 😄","ज़िंदगी short है, हँस लो 😂"]
+love:["तुम्हारी एक मुस्कान,\nमेरी पूरी दुनिया बदल देती है ❤️","सच्चा प्यार शब्दों का मोहताज नहीं होता।"],
+sad:["कुछ दर्द ऐसे होते हैं,\nजो दिखाए नहीं जाते 😔","खामोशी भी कभी बहुत कुछ कह जाती है।"],
+mot:["खुद पर भरोसा रखो,\nक्योंकि तुम कर सकते हो 💪","संघर्ष ही सफलता की असली पहचान है।"],
+fun:["प्यार strong होना चाहिए,\nWiFi जैसा 😄","ज़िंदगी छोटी है,\nहँस लिया करो 😂"]
 },
 en:{
-love:["Your smile changes everything ❤️","True love is felt, not shown."],
-sad:["Some pain stays silent 😔","Silence speaks loudly."],
-mot:["Believe in yourself 💪","Struggle builds success."],
-fun:["Love should be strong like WiFi 😄","Life is short, laugh more 😂"]
+love:["Your smile\nchanges my whole world ❤️","True love needs no words."],
+sad:["Some pain\nis never shown 😔","Silence speaks louder than words."],
+mot:["Believe in yourself 💪\nYou are stronger than you think.","Struggle creates success."],
+fun:["Love should be strong\nlike WiFi 😄","Life is short,\nlaugh more 😂"]
 }
 };
 
@@ -177,16 +168,13 @@ s.appendChild(o);
 }
 show();
 }
-function show(){
-document.getElementById("shayariText").innerText=data[lang][cat][i];
-}
+function show(){document.getElementById("shayariText").innerText=data[lang][cat][i];}
 function next(){i=(i+1)%data[lang][cat].length;show();}
 function prev(){i=(i-1+data[lang][cat].length)%data[lang][cat].length;show();}
-function changeCategory(){cat=document.getElementById("category").value;i=0;show();}
-function copyText(){navigator.clipboard.writeText(data[lang][cat][i]);alert("Copied ✅");}
-function shareText(){navigator.share?navigator.share({text:data[lang][cat][i]}):alert("Not supported");}
+function changeCategory(){cat=category.value;i=0;show();}
+function copy(){navigator.clipboard.writeText(data[lang][cat][i]);alert("Copied ✅");}
+function share(){navigator.share?navigator.share({text:data[lang][cat][i]}):alert("Not supported");}
 function toggleLang(){lang=lang==="hi"?"en":"hi";load();}
-
 load();
 </script>
 
