@@ -7,7 +7,7 @@
 
 <style>
 body{margin:0;font-family:Poppins,Arial;background:#000;color:#fff}
-.header{text-align:center;padding:14px;font-size:24px;font-weight:800}
+.header{text-align:center;padding:15px;font-size:24px;font-weight:800}
 .topbar{display:flex;gap:8px;justify-content:center;padding:8px}
 .topbar select,input{padding:8px;border-radius:20px;border:none}
 .categories{display:flex;overflow-x:auto;gap:8px;padding:10px}
@@ -36,56 +36,31 @@ body{margin:0;font-family:Poppins,Arial;background:#000;color:#fff}
   <select onchange="setLang(this.value)">
     <option value="hi">Hindi</option>
     <option value="en">English</option>
-    <option value="ur">Urdu</option>
-    <option value="mr">Marathi</option>
-    <option value="bh">Bhojpuri</option>
   </select>
   <input type="text" placeholder="Search..." oninput="search(this.value)">
 </div>
 
 <div class="categories" id="cats"></div>
 
-<div class="shayari-box" id="shayari"></div>
+<div class="shayari-box" id="shayari">Loading...</div>
 
 <div class="controls">
   <button onclick="prev()">⬅</button>
-  <button onclick="fav()">❤️</button>
   <button onclick="copy()">📋</button>
   <button onclick="share()">📤</button>
   <button onclick="next()">➡</button>
 </div>
 
 <script>
-let lang='hi',cat='',index=0,filtered=null;
+let lang='hi',cat='',index=0,data={},filtered=null;
 
-const data={
-hi:{
- love:["तुम्हारी मुस्कान ही मेरी दुनिया है ❤️","दिल ने तुम्हें अपना मान लिया 💞"],
- sad:["खामोशी बहुत कुछ कह जाती है 😔"],
- motivation:["खुद पर भरोसा रखो 💪"],
- funny:["प्यार WiFi जैसा होना चाहिए 😄"]
-},
-en:{
- love:["Your smile is my world ❤️"],
- sad:["Silence says everything 😔"],
- motivation:["Believe in yourself 💪"],
- funny:["Love should be like WiFi 😄"]
-},
-ur:{
- love:["تمہاری مسکراہٹ میری دنیا ہے ❤️"],
- sad:["خاموشی بہت کچھ کہہ جاتی ہے 😔"]
-},
-mr:{
- love:["तुझं हसणं माझं जग आहे ❤️"],
- motivation:["स्वतःवर विश्वास ठेवा 💪"]
-},
-bh:{
- love:["तोहार मुस्कान ही हमार दुनिया ह ❤️"],
- funny:["प्यार WiFi जइसन होखे 😄"]
-}
-};
-
-let favorites=JSON.parse(localStorage.getItem("fav")||"[]");
+fetch('shayari.json')
+.then(r=>r.json())
+.then(j=>{
+ data=j;
+ cat=Object.keys(data[lang])[0];
+ loadCats();show();
+});
 
 function loadCats(){
  const c=document.getElementById("cats");c.innerHTML='';
@@ -100,42 +75,19 @@ function loadCats(){
 
 function show(){
  let arr=filtered||data[lang][cat];
- document.getElementById("shayari").innerText=arr[index]||"No Shayari";
+ document.getElementById("shayari").innerText=arr[index];
 }
 
-function next(){
- let arr=filtered||data[lang][cat];
- index=(index+1)%arr.length;show();
-}
-function prev(){
- let arr=filtered||data[lang][cat];
- index=(index-1+arr.length)%arr.length;show();
-}
-function setLang(l){
- lang=l;cat=Object.keys(data[lang])[0];index=0;filtered=null;
- loadCats();show();
-}
+function next(){let a=filtered||data[lang][cat];index=(index+1)%a.length;show()}
+function prev(){let a=filtered||data[lang][cat];index=(index-1+a.length)%a.length;show()}
+function setLang(l){lang=l;cat=Object.keys(data[lang])[0];index=0;filtered=null;loadCats();show()}
 function search(v){
- let arr=data[lang][cat];
- filtered=arr.filter(s=>s.toLowerCase().includes(v.toLowerCase()));
+ let a=data[lang][cat];
+ filtered=a.filter(s=>s.includes(v));
  index=0;show();
 }
-function fav(){
- let s=data[lang][cat][index];
- favorites.push(s);
- localStorage.setItem("fav",JSON.stringify(favorites));
- alert("Favorite ❤️ Saved");
-}
-function copy(){
- navigator.clipboard.writeText(data[lang][cat][index]);
- alert("Copied ✅");
-}
-function share(){
- navigator.share({text:data[lang][cat][index]});
-}
-
-cat=Object.keys(data[lang])[0];
-loadCats();show();
+function copy(){navigator.clipboard.writeText(data[lang][cat][index]);alert("Copied ✅")}
+function share(){navigator.share({text:data[lang][cat][index]})}
 </script>
 
 </body>
