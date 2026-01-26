@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dilvara – Shayari</title>
+<title>Dilvara – Premium Shayari</title>
 
 <style>
 *{box-sizing:border-box;}
@@ -11,17 +11,18 @@ body{
   margin:0;
   height:100vh;
   font-family:'Poppins', Arial, sans-serif;
-  background:linear-gradient(180deg,#1d2671,#c33764);
+  background:#000;
   display:flex;
   justify-content:center;
   align-items:center;
 }
 .app{
   width:100%;
-  max-width:420px;
+  max-width:430px;
   height:100vh;
   display:flex;
   flex-direction:column;
+  overflow:hidden;
   color:#fff;
 }
 
@@ -31,138 +32,121 @@ body{
   padding:16px;
   font-size:24px;
   font-weight:700;
+  letter-spacing:1px;
 }
 
-/* CATEGORY */
-select{
-  margin:10px 20px;
-  padding:12px;
-  border-radius:30px;
-  border:none;
-  font-size:16px;
-}
-
-/* SHAYARI AREA */
-.shayari-box{
+/* SHAYARI FULL SCREEN */
+.shayari-area{
   flex:1;
-  margin:15px;
-  border-radius:28px;
-  background:linear-gradient(180deg,#ffffff,#f2f2f2);
   display:flex;
   align-items:center;
   justify-content:center;
   padding:30px;
   text-align:center;
-  box-shadow:0 20px 40px rgba(0,0,0,0.25);
+  transition:0.4s;
 }
-
 .shayari{
-  font-size:32px;          /* BIG */
-  font-weight:800;         /* BOLD */
-  line-height:1.7;
-  color:#333;              /* CLEAN READABLE */
+  font-size:34px;
+  font-weight:900;
+  line-height:1.6;
   white-space:pre-line;
+  text-shadow:0 8px 20px rgba(0,0,0,0.5);
 }
 
-/* ACTIONS */
-.actions{
+/* FLOATING BUTTONS */
+.fab{
+  position:absolute;
+  bottom:20px;
   display:flex;
-  padding:10px 12px;
+  gap:14px;
 }
-.actions button{
-  flex:1;
-  margin:5px;
-  padding:14px;
+.fab button{
+  width:56px;
+  height:56px;
+  border-radius:50%;
   border:none;
-  border-radius:30px;
-  font-size:15px;
-  font-weight:600;
-  background:linear-gradient(135deg,#667eea,#764ba2);
-  color:#fff;
+  font-size:20px;
+  background:rgba(255,255,255,0.9);
+  color:#333;
+  box-shadow:0 10px 25px rgba(0,0,0,0.4);
 }
-
-/* FOOTER */
-.footer{
-  text-align:center;
-  font-size:12px;
-  opacity:0.8;
-  padding-bottom:8px;
+.fab button:active{
+  transform:scale(0.9);
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="app" id="app">
 
   <div class="header">💖 दिलवारा शायरी</div>
 
-  <select id="category" onchange="changeCategory()"></select>
-
-  <div class="shayari-box">
+  <div class="shayari-area" id="area">
     <div class="shayari" id="shayariText"></div>
   </div>
 
-  <div class="actions">
+  <div class="fab">
     <button onclick="prev()">⬅</button>
     <button onclick="copy()">📋</button>
     <button onclick="share()">📤</button>
     <button onclick="next()">➡</button>
   </div>
 
-  <div class="footer">© 2026 Dilvara</div>
-
 </div>
 
 <script>
-let cat="love",i=0;
+/* 🔥 UNLIMITED SHAYARI DATA */
+const shayari=[
+"तुम्हारी एक मुस्कान,\nमेरी पूरी दुनिया बदल देती है ❤️",
+"सच्चा प्यार वो है,\nजो हर हाल में साथ निभाए।",
+"खामोशी भी कभी,\nसबसे ऊँची आवाज़ होती है 😔",
+"कुछ रिश्ते शब्दों के,\nमोहताज नहीं होते।",
+"खुद पर यकीन रखो,\nक्योंकि चमत्कार तुम हो 💪",
+"संघर्ष जितना गहरा,\nसफलता उतनी ऊँची।",
+"ज़िंदगी छोटी है,\nहँस लिया करो 😂",
+"प्यार strong होना चाहिए,\nWiFi जैसा 😄",
+"दिल से निकली बात,\nसीधे दिल तक जाती है।",
+"हर दिन नया मौका है,\nखुद को बेहतर बनाने का।"
+];
 
-const cats={
-love:"❤️ प्रेम शायरी",
-sad:"😢 दर्द शायरी",
-mot:"💪 प्रेरणादायक",
-fun:"😄 मज़ेदार"
-};
+/* RANDOM BACKGROUNDS */
+const colors=[
+"linear-gradient(135deg,#ff512f,#dd2476)",
+"linear-gradient(135deg,#1d2671,#c33764)",
+"linear-gradient(135deg,#8360c3,#2ebf91)",
+"linear-gradient(135deg,#ff8008,#ffc837)",
+"linear-gradient(135deg,#141e30,#243b55)",
+"linear-gradient(135deg,#42275a,#734b6d)"
+];
 
-const data={
-love:[
-"तुम्हारी एक मुस्कान\nमेरी पूरी दुनिया बदल देती है ❤️",
-"सच्चा प्यार शब्दों का मोहताज नहीं होता।"
-],
-sad:[
-"कुछ दर्द ऐसे होते हैं\nजो दिखाए नहीं जाते 😔",
-"खामोशी भी कभी बहुत कुछ कह जाती है।"
-],
-mot:[
-"खुद पर भरोसा रखो\nक्योंकि तुम कर सकते हो 💪",
-"संघर्ष ही सफलता की पहचान है।"
-],
-fun:[
-"प्यार strong होना चाहिए\nWiFi जैसा 😄",
-"ज़िंदगी छोटी है\nहँस लिया करो 😂"
-]
-};
+let i=0;
 
-function load(){
-let s=document.getElementById("category");
-s.innerHTML="";
-for(let k in cats){
-let o=document.createElement("option");
-o.value=k;o.text=cats[k];
-s.appendChild(o);
-}
-show();
-}
 function show(){
-document.getElementById("shayariText").innerText=data[cat][i];
+  document.getElementById("shayariText").innerText=shayari[i];
+  document.getElementById("area").style.background=
+    colors[Math.floor(Math.random()*colors.length)];
 }
-function next(){i=(i+1)%data[cat].length;show();}
-function prev(){i=(i-1+data[cat].length)%data[cat].length;show();}
-function changeCategory(){cat=category.value;i=0;show();}
-function copy(){navigator.clipboard.writeText(data[cat][i]);alert("शायरी कॉपी हो गई ✅");}
-function share(){navigator.share?navigator.share({text:data[cat][i]}):alert("Share supported नहीं है");}
 
-load();
+function next(){
+  i=(i+1)%shayari.length;
+  show();
+}
+function prev(){
+  i=(i-1+shayari.length)%shayari.length;
+  show();
+}
+function copy(){
+  navigator.clipboard.writeText(shayari[i]);
+  alert("शायरी कॉपी हो गई ✅");
+}
+function share(){
+  navigator.share?
+  navigator.share({text:shayari[i]}):
+  alert("Share supported नहीं है");
+}
+
+show();
 </script>
 
 </body>
