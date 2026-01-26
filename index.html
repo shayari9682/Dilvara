@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>Dilvara – Shayari App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      color: #fff;
+      text-align: center;
+    }
+    header {
+      padding: 20px;
+      font-size: 26px;
+      font-weight: bold;
+    }
+    .card {
+      background: #ffffff;
+      color: #333;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .shayari {
+      font-size: 20px;
+      line-height: 1.6;
+    }
+    button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 25px;
+      background: #ff4d6d;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e63956;
+    }
+    footer {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>💖 Dilvara Shayari</header>
+
+<div class="card">
+  <div class="shayari" id="shayariText">
+    "Dil se likhi har baat,  
+    Dil tak zaroor pahunchti hai… ❤️"
+  </div>
+  <button onclick="shareShayari()">📤 Share Shayari</button>
+</div>
+
+<footer>© 2026 Dilvara App</footer>
+
+<script>
+  function shareShayari() {
+    const text = document.getElementById("shayariText").innerText;
+    if (navigator.share) {
+      navigator.share({
+        text: text
+      });
+    } else {
+      alert("Sharing supported nahi hai is browser me");
+    }
+  }
+</script>
+
+</body>
+</html>
