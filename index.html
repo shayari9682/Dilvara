@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dilvara – Premium Shayari</title>
+<title>Dilvara – Shayari</title>
 
 <style>
 *{box-sizing:border-box;}
@@ -11,13 +11,14 @@ body{
   margin:0;
   height:100vh;
   font-family:'Poppins', Arial, sans-serif;
-  background:linear-gradient(160deg,#141e30,#243b55);
+  background:linear-gradient(180deg,#1d2671,#c33764);
   display:flex;
   justify-content:center;
+  align-items:center;
 }
 .app{
   width:100%;
-  max-width:430px;
+  max-width:420px;
   height:100vh;
   display:flex;
   flex-direction:column;
@@ -26,64 +27,47 @@ body{
 
 /* HEADER */
 .header{
-  padding:18px;
   text-align:center;
-  font-size:26px;
+  padding:16px;
+  font-size:24px;
   font-weight:700;
-  background:linear-gradient(90deg,#8e2de2,#4a00e0);
-}
-
-/* TOP */
-.top{
-  display:flex;
-  justify-content:center;
-  padding:10px;
-}
-.top button{
-  border:none;
-  padding:8px 18px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.15);
-  color:#fff;
-  font-size:14px;
 }
 
 /* CATEGORY */
 select{
-  margin:10px;
+  margin:10px 20px;
   padding:12px;
   border-radius:30px;
   border:none;
   font-size:16px;
 }
 
-/* SHAYARI CARD */
-.card{
+/* SHAYARI AREA */
+.shayari-box{
   flex:1;
   margin:15px;
-  border-radius:26px;
-  padding:22px;
-  background:linear-gradient(160deg,#1f1c2c,#2c3e50);
-  box-shadow:0 18px 35px rgba(0,0,0,0.4);
-  overflow-y:auto;            /* 🔥 FULL SHAYARI SCROLL */
+  border-radius:28px;
+  background:linear-gradient(180deg,#ffffff,#f2f2f2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:30px;
+  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,0.25);
 }
 
-/* BIG BOLD COLOURFUL SHAYARI */
 .shayari{
-  font-size:30px;              /* 🔥 BIG */
-  font-weight:900;             /* 🔥 BOLD */
+  font-size:32px;          /* BIG */
+  font-weight:800;         /* BOLD */
   line-height:1.7;
-  white-space:pre-line;        /* 🔥 LINE BREAK SAFE */
-  text-align:center;
-  background:linear-gradient(90deg,#ff6a00,#ffcc00,#00c6ff,#7f00ff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  color:#333;              /* CLEAN READABLE */
+  white-space:pre-line;
 }
 
 /* ACTIONS */
 .actions{
   display:flex;
-  padding:10px;
+  padding:10px 12px;
 }
 .actions button{
   flex:1;
@@ -91,7 +75,7 @@ select{
   padding:14px;
   border:none;
   border-radius:30px;
-  font-size:16px;
+  font-size:15px;
   font-weight:600;
   background:linear-gradient(135deg,#667eea,#764ba2);
   color:#fff;
@@ -102,7 +86,7 @@ select{
   text-align:center;
   font-size:12px;
   opacity:0.8;
-  padding-bottom:6px;
+  padding-bottom:8px;
 }
 </style>
 </head>
@@ -111,15 +95,11 @@ select{
 
 <div class="app">
 
-  <div class="header" id="title">💖 दिलवारा शायरी</div>
-
-  <div class="top">
-    <button onclick="toggleLang()">🌐 हिंदी / English</button>
-  </div>
+  <div class="header">💖 दिलवारा शायरी</div>
 
   <select id="category" onchange="changeCategory()"></select>
 
-  <div class="card">
+  <div class="shayari-box">
     <div class="shayari" id="shayariText"></div>
   </div>
 
@@ -130,51 +110,58 @@ select{
     <button onclick="next()">➡</button>
   </div>
 
-  <div class="footer">© 2026 Dilvara Premium</div>
+  <div class="footer">© 2026 Dilvara</div>
 
 </div>
 
 <script>
-let lang="hi",cat="love",i=0;
+let cat="love",i=0;
 
-const ui={
-hi:{title:"💖 दिलवारा शायरी",cats:{love:"❤️ प्रेम",sad:"😢 दर्द",mot:"💪 प्रेरणा",fun:"😄 मज़ेदार"}},
-en:{title:"💖 Dilvara Shayari",cats:{love:"❤️ Love",sad:"😢 Sad",mot:"💪 Motivation",fun:"😄 Funny"}}
+const cats={
+love:"❤️ प्रेम शायरी",
+sad:"😢 दर्द शायरी",
+mot:"💪 प्रेरणादायक",
+fun:"😄 मज़ेदार"
 };
 
 const data={
-hi:{
-love:["तुम्हारी एक मुस्कान\nमेरी पूरी दुनिया बदल देती है ❤️","सच्चा प्यार शब्दों का मोहताज नहीं होता।"],
-sad:["कुछ दर्द ऐसे होते हैं\nजो दिखाए नहीं जाते 😔","खामोशी भी कभी बहुत कुछ कह जाती है।"],
-mot:["खुद पर भरोसा रखो\nक्योंकि तुम कर सकते हो 💪","संघर्ष ही सफलता की असली पहचान है।"],
-fun:["प्यार strong होना चाहिए\nWiFi जैसा 😄","ज़िंदगी छोटी है\nहँस लिया करो 😂"]
-},
-en:{
-love:["Your smile\nchanges my whole world ❤️","True love needs no words."],
-sad:["Some pain\nis never shown 😔","Silence speaks louder than words."],
-mot:["Believe in yourself 💪\nYou are stronger than you think.","Struggle creates success."],
-fun:["Love should be strong\nlike WiFi 😄","Life is short\nlaugh more 😂"]
-}
+love:[
+"तुम्हारी एक मुस्कान\nमेरी पूरी दुनिया बदल देती है ❤️",
+"सच्चा प्यार शब्दों का मोहताज नहीं होता।"
+],
+sad:[
+"कुछ दर्द ऐसे होते हैं\nजो दिखाए नहीं जाते 😔",
+"खामोशी भी कभी बहुत कुछ कह जाती है।"
+],
+mot:[
+"खुद पर भरोसा रखो\nक्योंकि तुम कर सकते हो 💪",
+"संघर्ष ही सफलता की पहचान है।"
+],
+fun:[
+"प्यार strong होना चाहिए\nWiFi जैसा 😄",
+"ज़िंदगी छोटी है\nहँस लिया करो 😂"
+]
 };
 
 function load(){
-document.getElementById("title").innerText=ui[lang].title;
 let s=document.getElementById("category");
 s.innerHTML="";
-for(let k in ui[lang].cats){
+for(let k in cats){
 let o=document.createElement("option");
-o.value=k;o.text=ui[lang].cats[k];
+o.value=k;o.text=cats[k];
 s.appendChild(o);
 }
 show();
 }
-function show(){document.getElementById("shayariText").innerText=data[lang][cat][i];}
-function next(){i=(i+1)%data[lang][cat].length;show();}
-function prev(){i=(i-1+data[lang][cat].length)%data[lang][cat].length;show();}
+function show(){
+document.getElementById("shayariText").innerText=data[cat][i];
+}
+function next(){i=(i+1)%data[cat].length;show();}
+function prev(){i=(i-1+data[cat].length)%data[cat].length;show();}
 function changeCategory(){cat=category.value;i=0;show();}
-function copy(){navigator.clipboard.writeText(data[lang][cat][i]);alert("Copied ✅");}
-function share(){navigator.share?navigator.share({text:data[lang][cat][i]}):alert("Not supported");}
-function toggleLang(){lang=lang==="hi"?"en":"hi";load();}
+function copy(){navigator.clipboard.writeText(data[cat][i]);alert("शायरी कॉपी हो गई ✅");}
+function share(){navigator.share?navigator.share({text:data[cat][i]}):alert("Share supported नहीं है");}
+
 load();
 </script>
 
