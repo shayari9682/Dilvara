@@ -1,94 +1,64 @@
 <!DOCTYPE html>
-<html lang="hi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dilvara Shayari</title>
-
-<style>
-body{margin:0;font-family:Poppins,Arial;background:#000;color:#fff}
-.header{text-align:center;padding:15px;font-size:24px;font-weight:800}
-.topbar{display:flex;gap:8px;justify-content:center;padding:8px}
-.topbar select,input{padding:8px;border-radius:20px;border:none}
-.categories{display:flex;overflow-x:auto;gap:8px;padding:10px}
-.categories button{padding:8px 16px;border:none;border-radius:20px;background:#222;color:#fff}
-.categories button.active{background:#ff416c}
-.shayari-box{
- margin:15px;padding:30px;min-height:55vh;
- display:flex;align-items:center;justify-content:center;
- text-align:center;font-size:32px;font-weight:900;
- border-radius:25px;
- background:linear-gradient(135deg,#ff512f,#dd2476);
+<html lang="en">
+  <head>
+    <meta charset="UTF-agpl" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shayari & Quotes: AI Magic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                '50': '#f0f9ff',
+                '100': '#e0f2fe',
+                '200': '#bae6fd',
+                '300': '#7dd3fc',
+                '400': '#38bdf8',
+                '500': '#0ea5e9',
+                '600': '#0284c7',
+                '700': '#0369a1',
+                '800': '#075985',
+                '900': '#0c4a6e',
+                '950': '#082f49',
+              },
+            },
+            fontFamily: {
+              sans: ['Poppins', 'sans-serif'],
+              serif: ['Lora', 'serif'],
+              hindi: ['Hind', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Hind:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.38.0"
+  }
 }
-.controls{display:flex;justify-content:center;gap:15px;padding-bottom:20px}
-.controls button{
- width:55px;height:55px;border-radius:50%;
- border:none;font-size:20px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="header">💖 Dilvara Shayari</div>
-
-<div class="topbar">
-  <select onchange="setLang(this.value)">
-    <option value="hi">Hindi</option>
-    <option value="en">English</option>
-  </select>
-  <input type="text" placeholder="Search..." oninput="search(this.value)">
-</div>
-
-<div class="categories" id="cats"></div>
-
-<div class="shayari-box" id="shayari">Loading...</div>
-
-<div class="controls">
-  <button onclick="prev()">⬅</button>
-  <button onclick="copy()">📋</button>
-  <button onclick="share()">📤</button>
-  <button onclick="next()">➡</button>
-</div>
-
-<script>
-let lang='hi',cat='',index=0,data={},filtered=null;
-
-fetch('shayari.json')
-.then(r=>r.json())
-.then(j=>{
- data=j;
- cat=Object.keys(data[lang])[0];
- loadCats();show();
-});
-
-function loadCats(){
- const c=document.getElementById("cats");c.innerHTML='';
- Object.keys(data[lang]).forEach(k=>{
-  let b=document.createElement("button");
-  b.innerText=k.toUpperCase();
-  if(k===cat) b.classList.add("active");
-  b.onclick=()=>{cat=k;index=0;filtered=null;show();loadCats()}
-  c.appendChild(b);
- });
-}
-
-function show(){
- let arr=filtered||data[lang][cat];
- document.getElementById("shayari").innerText=arr[index];
-}
-
-function next(){let a=filtered||data[lang][cat];index=(index+1)%a.length;show()}
-function prev(){let a=filtered||data[lang][cat];index=(index-1+a.length)%a.length;show()}
-function setLang(l){lang=l;cat=Object.keys(data[lang])[0];index=0;filtered=null;loadCats();show()}
-function search(v){
- let a=data[lang][cat];
- filtered=a.filter(s=>s.includes(v));
- index=0;show();
-}
-function copy(){navigator.clipboard.writeText(data[lang][cat][index]);alert("Copied ✅")}
-function share(){navigator.share({text:data[lang][cat][index]})}
 </script>
-
-</body>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
