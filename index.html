@@ -3,160 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alfaaz Ultra - All-in-One Shayari App</title>
+    <title>Alfaaz Pro - Ultra Shayari App</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Khand:wght@700&family=Mukta:wght@400;700&family=Teko:wght@600&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --primary: #6c5ce7; --accent: #ff4757; --dark: #2d3436; --light: #f1f2f6; --glass: rgba(255, 255, 255, 0.9); }
-        
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Poppins', 'Mukta', sans-serif; background: var(--light); margin: 0; color: var(--dark); }
+        :root { --primary: #6c5ce7; --accent: #ff4757; --dark: #2d3436; --light: #f1f2f6; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Poppins', 'Mukta', sans-serif; }
+        body { background: var(--light); margin: 0; padding-bottom: 20px; overflow-x: hidden; }
 
-        /* Header & Navigation */
+        /* Header */
         header { background: linear-gradient(135deg, var(--primary), #a29bfe); color: white; padding: 25px 15px; text-align: center; border-radius: 0 0 30px 30px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .search-container { margin-top: 15px; padding: 0 10px; }
-        #searchBar { width: 100%; padding: 12px 20px; border-radius: 25px; border: none; outline: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 1rem; }
+        .search-box { width: 90%; max-width: 400px; padding: 12px 20px; border-radius: 25px; border: none; margin-top: 15px; outline: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        /* Tabs */
-        .tabs { display: flex; justify-content: space-around; background: white; padding: 10px 0; font-weight: 600; cursor: pointer; border-bottom: 1px solid #ddd; }
-        .tab.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
-
-        /* Shayari List */
-        .container { padding: 20px; max-width: 700px; margin: auto; min-height: 80vh; }
-        .card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.3s; position: relative; overflow: hidden; }
-        .card:active { transform: scale(0.98); }
-        .shayari-txt { font-size: 1.2rem; line-height: 1.7; margin-bottom: 20px; color: #2d3436; font-weight: 500; }
+        /* Container */
+        .container { padding: 20px; max-width: 600px; margin: auto; }
+        .card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); position: relative; animation: slideUp 0.5s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .shayari-txt { font-size: 1.2rem; line-height: 1.7; margin-bottom: 20px; color: var(--dark); font-weight: 500; }
 
         /* Buttons */
-        .actions { display: flex; gap: 10px; flex-wrap: wrap; border-top: 1px solid #eee; padding-top: 15px; }
-        .btn { border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
-        .btn-copy { background: #dfe6e9; color: #636e72; }
-        .btn-fav { background: #fff2f2; color: var(--accent); }
-        .btn-edit { background: var(--primary); color: white; flex: 1; justify-content: center; }
-        .fav-active { background: var(--accent) !important; color: white !important; }
+        .actions { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 15px; }
+        .btn { border: none; padding: 10px; border-radius: 12px; cursor: pointer; flex: 1; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.2s; }
+        .btn-copy { background: #eee; color: #555; }
+        .btn-edit { background: var(--primary); color: white; }
 
         /* Editor Modal */
-        #editor { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; flex-direction: column; align-items: center; overflow-y: auto; padding: 20px; }
-        canvas { max-width: 100%; height: auto; border-radius: 15px; box-shadow: 0 0 30px rgba(255,255,255,0.2); }
+        #editor { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; flex-direction: column; align-items: center; justify-content: flex-start; overflow-y: auto; padding: 20px; }
+        canvas { max-width: 100%; height: auto; border-radius: 15px; background: #333; margin-top: 50px; }
         .controls { background: white; width: 100%; max-width: 500px; padding: 20px; border-radius: 20px; margin-top: 20px; display: grid; gap: 15px; }
-        .close-editor { position: absolute; top: 15px; right: 20px; color: white; font-size: 40px; cursor: pointer; }
-        
-        .bg-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
-        .bg-scroll img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; cursor: pointer; }
-
-        footer { text-align: center; padding: 20px; color: #999; font-size: 0.8rem; }
+        .close-x { position: absolute; top: 15px; right: 20px; color: white; font-size: 40px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <header>
-    <h2 style="margin:0">अल्फ़ाज़ Ultra</h2>
-    <div class="search-container">
-        <input type="text" id="searchBar" placeholder="शायरी खोजें (उदा. जीत, दिल, दर्द)..." onkeyup="filterShayari()">
-    </div>
+    <h2 style="margin:0">अल्फ़ाज़ Premium</h2>
+    <input type="text" id="searchBar" class="search-box" placeholder="शायरी खोजें..." onkeyup="search()">
 </header>
 
-<div class="tabs">
-    <div class="tab active" onclick="switchTab('all', this)">सभी शायरी</div>
-    <div class="tab" onclick="switchTab('fav', this)">पसंदीदा ❤️</div>
-</div>
-
-<div class="container" id="shayariContainer">
+<div class="container" id="mainContainer">
     </div>
 
 <div id="editor">
-    <span class="close-editor" onclick="closeEditor()">&times;</span>
+    <span class="close-x" onclick="closeEditor()">&times;</span>
     <canvas id="canvas" width="1080" height="1080"></canvas>
-    
     <div class="controls">
-        <b>1. बैकग्राउंड चुनें:</b>
-        <div class="bg-scroll">
-            <div style="min-width:60px; height:60px; background:#eee; display:flex; align-items:center; justify-content:center; border-radius:10px; cursor:pointer;" onclick="document.getElementById('fInput').click()">➕</div>
-            <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400" onclick="setBG(this.src)">
-            <img src="https://images.unsplash.com/photo-1500673922987-e212871fec22?w=400" onclick="setBG(this.src)">
-            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400" onclick="setBG(this.src)">
+        <b>डिजाइन सेटिंग्स:</b>
+        <select id="fontSelect" onchange="draw()" style="padding:10px; border-radius:8px;">
+            <option value="Mukta">Modern Clean</option>
+            <option value="Kalam">Handwritten</option>
+            <option value="Khand">Bold Headline</option>
+            <option value="Teko">Stylish Slim</option>
+        </select>
+        <div style="display:flex; justify-content: space-between; align-items: center;">
+            <label>टेक्स्ट कलर: <input type="color" id="tColor" value="#ffffff" onchange="draw()"></label>
+            <label>अंधेरा: <input type="range" id="darkness" min="0" max="0.8" step="0.1" value="0.5" oninput="draw()"></label>
         </div>
-        <input type="file" id="fInput" hidden onchange="handleFile(event)">
-
-        <b>2. फ़ॉन्ट और स्टाइल:</b>
-        <div style="display:flex; gap:10px;">
-            <select id="fontSelect" style="flex:1; padding:10px;" onchange="draw()">
-                <option value="Mukta">Modern</option>
-                <option value="Kalam">Handwritten</option>
-                <option value="Khand">Bold</option>
-                <option value="Teko">Stylish</option>
-            </select>
-            <input type="color" id="tColor" value="#ffffff" style="width:50px; height:40px;" onchange="draw()">
-        </div>
-        
-        <button class="btn btn-edit" style="padding:15px;" onclick="download()">Download Post (HD)</button>
+        <button class="btn btn-edit" style="padding:15px;" onclick="download()">Save HD Post</button>
     </div>
 </div>
 
-<footer>Design with ❤️ for Shayari Lovers</footer>
-
 <script>
-    // 1. Data Store (Add up to 1000+ here)
-    const allShayari = [
-        { id: 1, text: "न थके कभी पैर, न कभी हिम्मत हारी है,\nजज्बा है कुछ बनने का, इसलिए सफर जारी है।", cat: "motivation" },
-        { id: 2, text: "ख्वाबों में भी तुझसे मिलना अब अच्छा लगता है,\nहकीकत में तो तू मुझे पराया सा लगता है।", cat: "sad" },
-        { id: 3, text: "दुनियादारी की चादर ओढ़ के बैठे हैं,\nवरना हम भी अपनी मस्ती में बादशाह थे।", cat: "attitude" },
-        { id: 4, text: "इश्क ने हमें निकम्मा कर दिया गालिब,\nवरना हम भी आदमी थे काम के।", cat: "love" },
-        { id: 5, text: "तू अपनी खूबियां ढूंढ खामियां निकालने के लिए लोग हैं,\nअगर कदम रखना है तो आगे रख पीछे खींचने के लिए लोग हैं।", cat: "motivation" }
+    // 1000+ शायरी का स्ट्रक्चर (यहाँ आप डेटा जोड़ते रहें)
+    const shayariList = [
+        { id: 1, text: "न थके कभी पैर, न कभी हिम्मत हारी है,\nजज्बा है कुछ बनने का, इसलिए सफर जारी है।" },
+        { id: 2, text: "मंजिलें उन्हीं को मिलती हैं जिनके सपनों में जान होती है,\nपंखों से कुछ नहीं होता हौसलों से उड़ान होती है।" },
+        { id: 3, text: "हमारी शख्सियत का अंदाज़ा तुम क्या लगाओगे,\nहम तो उनके भी नहीं होते, जो हर किसी के हो जाते हैं।" },
+        { id: 4, text: "कामयाब होने के लिए अकेले ही आगे बढ़ना पड़ता है,\nलोग तो तब पीछे आते हैं जब हम कामयाब होने लगते हैं।" },
+        { id: 5, text: "भीड़ में खड़ा होना मकसद नहीं है मेरा,\nबल्कि भीड़ जिसके लिए खड़ी हो वो बनना है मुझे।" }
     ];
 
-    let favorites = JSON.parse(localStorage.getItem('favs')) || [];
-    let currentView = 'all';
-
-    // 2. Initial Render
-    function render() {
-        const container = document.getElementById('shayariContainer');
-        container.innerHTML = '';
-        
-        let list = (currentView === 'all') ? allShayari : allShayari.filter(s => favorites.includes(s.id));
-        
-        if(list.length === 0) {
-            container.innerHTML = '<center style="margin-top:50px; color:#999;">यहाँ अभी कुछ नहीं है...</center>';
-            return;
-        }
-
-        list.forEach(item => {
-            const isFav = favorites.includes(item.id);
-            container.innerHTML += `
-                <div class="card">
-                    <div class="shayari-txt">${item.text.replace(/\n/g, '<br>')}</div>
-                    <div class="actions">
-                        <button class="btn btn-copy" onclick="copyText('${item.text}')">Copy</button>
-                        <button class="btn btn-fav ${isFav ? 'fav-active' : ''}" onclick="toggleFav(${item.id})">❤️</button>
-                        <button class="btn btn-edit" onclick="openEditor(\`${item.text}\`)">Create Image</button>
-                    </div>
+    function renderShayari(data) {
+        const container = document.getElementById('mainContainer');
+        container.innerHTML = data.map(item => `
+            <div class="card">
+                <div class="shayari-txt">${item.text.replace(/\n/g, '<br>')}</div>
+                <div class="actions">
+                    <button class="btn btn-copy" onclick="copyText(\`${item.text}\`)">Copy</button>
+                    <button class="btn btn-edit" onclick="openEditor(\`${item.text}\`)">🎨 Create Post</button>
                 </div>
-            `;
-        });
+            </div>
+        `).join('');
     }
 
-    // 3. Logic Functions
-    function switchTab(view, el) {
-        currentView = view;
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
-        render();
-    }
-
-    function toggleFav(id) {
-        if(favorites.includes(id)) favorites = favorites.filter(i => i !== id);
-        else favorites.push(id);
-        localStorage.setItem('favs', JSON.stringify(favorites));
-        render();
-    }
-
-    function filterShayari() {
+    function search() {
         const q = document.getElementById('searchBar').value.toLowerCase();
-        const cards = document.getElementsByClassName('card');
-        Array.from(cards).forEach(card => {
-            const txt = card.innerText.toLowerCase();
-            card.style.display = txt.includes(q) ? 'block' : 'none';
-        });
+        const filtered = shayariList.filter(s => s.text.toLowerCase().includes(q));
+        renderShayari(filtered);
     }
 
     function copyText(t) {
@@ -164,32 +99,23 @@
         alert("कॉपी हो गई!");
     }
 
-    // 4. Editor Logic
+    // CANVAS LOGIC
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    let editTxt = "";
-    let bg = new Image();
-    bg.crossOrigin = "anonymous";
-    bg.src = "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=1080";
+    let currentTxt = "";
+    let bgImg = new Image();
+    bgImg.crossOrigin = "anonymous";
+    bgImg.src = "https://images.unsplash.com/photo-1500673922987-e212871fec22?w=1080";
 
     function openEditor(t) {
-        editTxt = t;
+        currentTxt = t;
         document.getElementById('editor').style.display = 'flex';
-        bg.onload = () => draw();
         draw();
     }
 
-    function setBG(src) { bg.src = src; bg.onload = () => draw(); }
-
-    function handleFile(e) {
-        const reader = new FileReader();
-        reader.onload = (ev) => setBG(ev.target.result);
-        reader.readAsDataURL(e.target.files[0]);
-    }
-
     function draw() {
-        ctx.drawImage(bg, 0, 0, 1080, 1080);
-        ctx.fillStyle = "rgba(0,0,0,0.5)";
+        ctx.drawImage(bgImg, 0, 0, 1080, 1080);
+        ctx.fillStyle = `rgba(0,0,0,${document.getElementById('darkness').value})`;
         ctx.fillRect(0,0,1080,1080);
         
         ctx.fillStyle = document.getElementById('tColor').value;
@@ -197,25 +123,32 @@
         const font = document.getElementById('fontSelect').value;
         ctx.font = `bold 65px ${font}`;
         
-        const lines = editTxt.split('\n');
+        const lines = currentTxt.split('\n');
         let y = 540 - (lines.length * 40);
-        lines.forEach(l => { ctx.fillText(l, 540, y); y += 90; });
+        lines.forEach(line => {
+            ctx.fillText(line, 540, y);
+            y += 90;
+        });
         
-        ctx.font = "30px Poppins"; ctx.globalAlpha = 0.6;
-        ctx.fillText("Created with Alfaaz Pro", 540, 1000);
-        ctx.globalAlpha = 1;
+        ctx.font = "30px Poppins";
+        ctx.globalAlpha = 0.5;
+        ctx.fillText("Made with Alfaaz Ultra App", 540, 1020);
+        ctx.globalAlpha = 1.0;
     }
 
     function download() {
         const link = document.createElement('a');
-        link.download = 'shayari.jpg';
+        link.download = 'shayari_post.jpg';
         link.href = canvas.toDataURL('image/jpeg', 0.9);
         link.click();
     }
 
     function closeEditor() { document.getElementById('editor').style.display = 'none'; }
 
-    render();
+    // Initial Load
+    window.onload = () => renderShayari(shayariList);
 </script>
+
 </body>
 </html>
+        
