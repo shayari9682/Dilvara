@@ -317,7 +317,27 @@
     }
 
     // Initial render
-    window.onload = () => render(shayaris);
+   const bgList = [
+    "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=800",
+    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800",
+    "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800",
+    "https://images.unsplash.com/photo-1500673922987-e212871fec22?w=800"
+];
+
+const bgThumbContainer = document.getElementById('bgThumbnails');
+if(bgThumbContainer) {
+    bgList.forEach(url => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.style = "width:60px; height:60px; border-radius:10px; object-fit:cover; cursor:pointer; border:2px solid #555;";
+        img.onclick = () => {
+            bgImage.src = url;
+            bgImage.onload = () => draw();
+        };
+        bgThumbContainer.appendChild(img);
+    });
+}
+ window.onload = () => render(shayaris);
 </script>
 
 </body>
