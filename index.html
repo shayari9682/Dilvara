@@ -3,51 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shayari App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>Alfaaz Pro - Advanced Shayari App</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Mukta:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Poppins', 'Mukta', sans-serif; background: #f4f4f9; margin: 0; text-align: center; }
-        header { background: #6c5ce7; color: white; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .container { padding: 20px; max-width: 500px; margin: auto; }
-        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .btn { background: #6c5ce7; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent: #ff7675;
+            --bg: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.08);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        /* Glassmorphism Header */
+        header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            padding: 25px 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            background: linear-gradient(to right, #a29bfe, #fab1a0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-bar {
+            width: 90%;
+            max-width: 450px;
+            margin-top: 15px;
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            outline: none;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Shayari Grid */
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            display: grid;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px;
+            position: relative;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.2);
+        }
+
+        .shayari-txt {
+            font-family: 'Mukta', sans-serif;
+            font-size: 1.4rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Modern Buttons */
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-copy { background: rgba(255,255,255,0.1); color: white; }
+        .btn-edit { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3); }
+
+        .btn:active { transform: scale(0.95); }
+
+        /* Editor Modal Overlay */
+        #editor {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .controls {
+            background: #1e293b;
+            width: 100%;
+            max-width: 450px;
+            padding: 25px;
+            border-radius: 24px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 35px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Tags/Categories */
+        .category-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 20px;
+            scrollbar-width: none;
+        }
+        .tag {
+            background: rgba(255,255,255,0.05);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>अल्फ़ाज़ Pro</h1>
+    <h1>अल्फ़ाज़ Premium</h1>
+    <input type="text" id="searchBar" class="search-bar" placeholder="शायरी या मूड खोजें..." onkeyup="search()">
 </header>
 
-<div class="container" id="list">
+<div class="category-scroll">
+    <div class="tag">🔥 Attitude</div>
+    <div class="tag">❤️ Love</div>
+    <div class="tag">💔 Sad</div>
+    <div class="tag">🚀 Success</div>
+    <div class="tag">👬 Friendship</div>
+</div>
+
+<div class="container" id="shayariContainer">
     </div>
 
+<div id="editor">
+    <span class="close-btn" onclick="closeEditor()">&times;</span>
+    <canvas id="canvas" width="1080" height="1350"></canvas>
+    
+    <div class="controls">
+        <label>फ़ॉन्ट स्टाइल:
+            <select id="fontFamily" onchange="draw()" style="width:100%; padding:10px; margin-top:5px; border-radius:8px;">
+                <option value="Mukta">Modern Clean</option>
+                <option value="Kalam">Handwritten (कलम)</option>
+                <option value="serif">Classic</option>
+            </select>
+        </label>
+        
+        <div style="display:flex; justify-content:space-between;">
+            <label>टेक्स्ट कलर: <input type="color" id="textColor" value="#ffffff" onchange="draw()"></label>
+            <label>Overlay: <input type="range" id="overlayRange" min="0" max="0.8" step="0.1" value="0.4" oninput="draw()"></label>
+        </div>
+
+        <button class="btn btn-edit" style="width:100%; padding:15px; justify-content:center;" onclick="download()">Download HD Post</button>
+    </div>
+</div>
+
 <script>
-    // सरल डेटा ताकि एरर न आए
-    const data = [
-        { text: "मंजिलें उन्हीं को मिलती हैं जिनके सपनों में जान होती है।" },
-        { text: "कामयाब होने के लिए अकेले ही आगे बढ़ना पड़ता है।" },
-        { text: "अपनी शख्सियत का अंदाज़ा तुम क्या लगाओगे।" }
+    // Advanced Shayari Database
+    const shayaris = [
+        { text: "हम वो हैं जो नज़रों से दिल जीत लिया करते हैं,\nहम वो हैं जो अपनी सादगी से सबको अपना बना लिया करते हैं।" },
+        { text: "परिंदों को मिलेगी मंजिल एक दिन, ये फैले हुए उनके पर बोलते हैं,\nवही लोग रहते हैं खामोश अक्सर, ज़माने में जिनके हुनर बोलते हैं।" },
+        { text: "हुकूमत वो ही करता है जिसका दिलों पर राज होता है,\nवरना गली के मुर्गों के सिर पर भी ताज होता है।" },
+        { text: "वक्त सबको मिलता है जिंदगी बदलने के लिए,\nपर जिंदगी दोबारा नहीं मिलती वक्त बदलने के लिए।" },
+        { text: "राह संघर्ष की जो चलता है, वो ही संसार को बदलता है,\nजिसने रातों से जंग जीती, सुबह सूर्य बनकर वही चमकता है।" }
     ];
 
-    const listDiv = document.getElementById('list');
+    const container = document.getElementById('shayariContainer');
 
-    try {
-        if(data.length === 0) {
-            listDiv.innerHTML = "कोई शायरी नहीं मिली।";
-        } else {
-            data.forEach(item => {
-                listDiv.innerHTML += `
-                    <div class="card">
-                        <p style="font-size:1.2rem;">${item.text}</p>
-                        <button class="btn" onclick="alert('कॉपी हुई!')">Copy</button>
-                    </div>`;
-            });
-        }
-    } catch (err) {
-        console.error("डिस्प्ले में एरर है:", err);
-        listDiv.innerHTML = "सर्वर लोड होने में समस्या है।";
+    function render(list) {
+        container.innerHTML = list.map(s => `
+            <div class="card">
+                <div class="shayari-txt">${s.text.replace(/\n/g, '<br>')}</div>
+                <div class="actions">
+                    <button class="btn btn-copy" onclick="copyText(\`${s.text}\`)">📋 Copy</button>
+                    <button class="btn btn-edit" onclick="openEditor(\`${s.text}\`)">✨ Design Post</button>
+                </div>
+            </div>
+        `).join('');
     }
+
+    function search() {
+        const query = document.getElementById('searchBar').value.toLowerCase();
+        const filtered = shayaris.filter(s => s.text.toLowerCase().includes(query));
+        render(filtered);
+    }
+
+    function copyText(t) {
+        navigator.clipboard.writeText(t);
+        alert("कॉपी हो गई!");
+    }
+
+    // Canvas Advanced Logic
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let currentShayari = "";
+    let bgImage = new Image();
+    bgImage.crossOrigin = "anonymous";
+    bgImage.src = "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=1080";
+
+    function openEditor(t) {
+        currentShayari = t;
+        document.getElementById('editor').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        draw();
+    }
+
+    function draw() {
+        const font = document.getElementById('fontFamily').value;
+        const color = document.getElementById('textColor').value;
+        const overlay = document.getElementById('overlayRange').value;
+
+        // Background
+        ctx.drawImage(bgImage, 0, 0, 1080, 1350);
+        
+        // Dark overlay
+        ctx.fillStyle = `rgba(0,0,0, ${overlay})`;
+        ctx.fillRect(0, 0, 1080, 1350);
+
+        // Text settings
+        ctx.fillStyle = color;
+        ctx.textAlign = "center";
+        ctx.font = `bold 65px ${font}`;
+        
+        const lines = currentShayari.split('\n');
+        let startY = (1350 / 2) - ((lines.length - 1) * 45);
+
+        lines.forEach(line => {
+            ctx.fillText(line, 540, startY);
+            startY += 100;
+        });
+
+        // Branding
+        ctx.font = "30px Poppins";
+        ctx.globalAlpha = 0.6;
+        ctx.fillText("@AlfaazPro_App", 540, 1250);
+        ctx.globalAlpha = 1;
+    }
+
+    function download() {
+        const link = document.createElement('a');
+        link.download = 'shayari_alfaaz.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+
+    function closeEditor() {
+        document.getElementById('editor').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // Initial render
+    window.onload = () => render(shayaris);
 </script>
+
 </body>
 </html>
