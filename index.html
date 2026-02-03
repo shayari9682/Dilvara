@@ -197,7 +197,12 @@
 body>
 
 <header>
-    <h1>अल्फ़ाज़ Premium</h1>
+    <h1>अल्फ़ाज़ Premium</h1><div style="text-align: right; padding: 0 15px;">
+    <button onclick="shareApp()" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.8rem;">
+        🔗 Share App
+    </button>
+</div>
+
     <input type="text" id="searchBar" class="search-bar" placeholder="शायरी या मूड खोजें..." onkeyup="search()">
 </header>
 
@@ -237,7 +242,24 @@ body>
     </div>
 </div>
 
-<script>
+<script>function shareApp() {
+    const shareData = {
+        title: 'अल्फ़ाज़ Pro - Shayari Editor',
+        text: 'देखिए मैंने इस ऐप से कितनी सुंदर शायरी डिजाइन की है! आप भी ट्राई करें:',
+        url: window.location.href // यह अपने आप आपका GitHub लिंक ले लेगा
+    };
+
+    if (navigator.share) {
+        navigator.share(shareData)
+            .then(() => console.log('सक्सेस!'))
+            .catch((err) => console.log('एरर:', err));
+    } else {
+        // अगर ब्राउज़र शेयरिंग सपोर्ट नहीं करता (जैसे पुराने फोन)
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareData.text + " " + shareData.url)}`;
+        window.open(whatsappUrl, '_blank');
+    }
+}
+
     // Advanced Shayari Database
     const shayaris = [
         { text: "हम वो हैं जो नज़रों से दिल जीत लिया करते हैं,\nहम वो हैं जो अपनी सादगी से सबको अपना बना लिया करते हैं।" },
